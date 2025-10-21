@@ -1,99 +1,34 @@
 {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": "Highest Temeperature",
-    "width": 300,
-    "height": 250,
-    "background": "#dae0eb" , 
-
-    "projection": {
-        "type": "mercator"
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Highest Temperature",
+  "width": 320,
+  "height": 260,
+  "background": "#dae0eb",
+  "projection": {"type": "conicEqualArea", "center": [134,-26], "parallels": [-18,-36]},
+  "layer": [
+    {
+      "data": {"url": "maps/australia_map.json", "format": {"type": "topojson","feature": "SA3_2016_AUST"}},
+      "mark": {"type":"geoshape","fill":"white","stroke":"#888"}
     },
-    "config": {
-        "legend": {
-            "title":null, 
-          "labelFont": "Times New Roman",
-          "labelFontSize": 10,
-          "labelColor": "black",
-          "orient": "right"
-        }
-      }, 
-    "layer": [
-        {
-            "data": {
-                "url": "maps/australia_map.json",
-                "format": {
-                    "type": "topojson",
-                    "feature": "SA3_2016_AUST"
-                }
-            },
-            "mark": {
-                "type": "geoshape",
-          "fill": "white",
-          "stroke": "darkgray"
-            }
+    {
+      "data": {"url": "datasets/aus_highest_temp.csv"},
+      "mark": {"type": "circle"},
+      "encoding": {
+        "longitude": {"field":"Lon","type":"quantitative"},
+        "latitude": {"field":"Lat","type":"quantitative"},
+        "color": {
+          "field":"Temperature","type":"quantitative",
+          "scale":{"scheme":"orangered","domain":[40,51]},
+          "legend":{"title":"°C"}
         },
-        {
-            "data": {
-                "url": "datasets/aus_highest_temp.csv"
-            },
-            "mark": {
-                "type": "circle"
-            },
-            "encoding": {
-                "longitude": {
-                    "field": "Lon",
-                    "type": "quantitative"
-                },
-                "latitude": {
-                    "field": "Lat",
-                    "type": "quantitative"
-                },
-                "color": {
-                    "field": "Temperature",
-                    "type": "quantitative",
-                    "scale": {
-                        "domain": [
-                            40,
-                            51
-                        ],
-                        "range": [
-                            "yellow",
-                            "red"
-                        ]
-                    }
-                },
-                "size": {
-                    "field": "Temperature",
-                    "type": "quantitative",
-                    "scale": {
-                        "domain": [
-                            40,
-                            51
-                        ],
-                        "range": [
-                            50,
-                            300
-                        ]
-                    }
-                },
-                "tooltip": [
-                    {
-                        "field": "Place name",
-                        "type": "nominal",
-                        "title": "Place Name"
-                    },
-                    {
-                        "field": "Date",
-                        "type": "ordinal",
-                        "title": "Date"
-                    },
-                    {
-                        "field": "Temperature",
-                        "type": "quantitative",
-                        "title": "Highest Temperature (°C)"
-                    }
-                ]
-            }
-        }
-    ]
+        "size": {"field":"Temperature","type":"quantitative","scale":{"domain":[40,51],"range":[30,250]}},
+        "tooltip": [
+          {"field":"Place name","type":"nominal","title":"Place"},
+          {"field":"Date","type":"ordinal"},
+          {"field":"Temperature","type":"quantitative","title":"Highest (°C)"}
+        ]
+      }
+    }
+  ],
+  "config":{"legend":{"labelFont":"Times New Roman","labelFontSize":10,"labelColor":"black","orient":"right"}}
 }
