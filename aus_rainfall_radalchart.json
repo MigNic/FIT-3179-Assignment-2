@@ -1,0 +1,91 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "A basic radial plot for Australian Rainfall Data.",
+  "params": [
+    {
+      "name": "State_selection",
+      "value":"Adelaide",
+      "bind": {
+        "input": "select",
+        "options": [
+          "Adelaide",
+          "Alice Springs",
+          "Brisbane",
+          "Canberra",
+          "Darwin",
+          "Hobart",
+          "Melbourne",
+          "Perth",
+          "Broome",
+          "Sydney",
+          "Townsville",
+          "Cairns"
+        ],
+        "name": "State Selection: "
+      }
+    }
+  ],
+  
+  "width": 500,
+  "height": 500,
+  "data": {
+    "url": "datasets/aus_rainfall.csv"
+  },
+  "encoding": {
+    "theta": {
+      "field": "ANNUAL",
+      "type": "quantitative"
+    },
+    "color": {
+      "field": "LOCATION",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Adelaide",
+          "Alice Springs",
+          "Brisbane",
+          "Canberra",
+          "Darwin",
+          "Hobart",
+          "Melbourne",
+          "Perth",
+          "Broome",
+          "Sydney",
+          "Townsville",
+          "Cairns"
+        ],
+        "range": [
+          "#1f77b4",
+          "#ff7f0e",
+          "#2ca02c",
+          "#d62728",
+          "#9467bd",
+          "#8c564b",
+          "#e377c2",
+          "#7f7f7f",
+          "#bcbd22",
+          "#17becf",
+          "#ffbb78",
+          "#98df8a"
+        ]
+      }
+    },
+"opacity": {
+  "condition": {
+    "test": "datum.LOCATION === State_selection",
+    "value": 1  
+  },
+  "value": 0.3  
+}
+,
+    "tooltip": [ 
+      {"field": "LOCATION", "title": "Location"},
+      {"field": "ANNUAL", "title": "Annual Rainfall"}
+    ]
+  },
+  "mark": {
+    "type": "arc",
+    "innerRadius": 70,
+    "stroke": "#fff"
+  }
+}

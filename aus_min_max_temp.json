@@ -1,0 +1,165 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "params": [
+    {
+      "name": "State_selection",
+      "value": "Adelaide"
+    }, 
+    {
+      "name": "highlight_type",
+      "value": null 
+    }
+  ],
+  "title": {
+    "text": "Cities Minimum and Maximum Temperature",
+    "fontSize": 20,  
+    "font": "Times New Roman" , 
+    "align": "center",  
+    "anchor": "middle" 
+},
+  "width": 600,
+  "height": 300,
+  "background": "#e9eef7",
+  "data": {
+    "url": "datasets/aus_min_max_temp.csv"
+  },
+
+  "transform": [
+    {
+      "fold": [
+        "JAN",
+        "FEB",
+        "MAR",
+        "APR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC"
+      ],
+      "as": [
+        "Month",
+        "MonthVAl"
+      ]
+    },
+    {
+      "filter": {
+        "field": "TYPE",
+        "oneOf": [
+          "min",
+          "max"
+        ]
+      }
+    },
+    {
+      "filter": "datum.LOCATION == State_selection"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "title": null,
+      "field": "Month",
+      "type": "nominal",
+      "sort": [
+        "JAN",
+        "FEB",
+        "MAR",
+        "APR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC"
+      ],
+      "axis": {
+        "offset": 5,
+        "ticks": true,
+        "minExtent": 70,
+        "domain": true,
+        "domainColor": "black",
+        "tickColor": "black",
+        "labelColor": "black" , 
+        "titleColor": "black" 
+      }
+    },
+    "y": {
+      "field": "MonthVAl",
+      "type": "quantitative",
+      "title": "Temperature values ",
+      "axis": {
+        "domain": true,
+        "domainColor": "black",
+        "ticks": true,
+        "tickColor": "black",
+        "labelColor": "black" , 
+        "titleColor": "black" 
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": "line",
+      "encoding": {
+        "detail": {
+          "field": "Month",
+          "type": "nominal"
+        },
+        "color": {
+          "value": "#db646f"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true
+      },
+      "encoding": {
+        "color": {
+          "field": "TYPE",
+          "type": "ordinal",
+          "legend": null, 
+          "scale": {
+            "domain": [
+              "min",
+              "max"
+            ],
+            "range": [
+              "#2577fa",
+              "#f57749"
+            ]
+          },
+          "title": "Type"
+        },
+        "size": {
+          "value": 100
+        },
+        "opacity": {
+          "condition": {
+"test": "highlight_type == null || datum.TYPE == highlight_type",          
+  "value": 1
+          },
+          "value": 0.2
+        },
+        "tooltip": [
+          {
+            "field": "Month",
+            "type": "nominal",
+            "title": "Month"
+          },
+          {
+            "field": "MonthVAl",
+            "type": "quantitative",
+            "title": "Temperature"
+          }
+        ]
+      }
+    }
+  ]
+}

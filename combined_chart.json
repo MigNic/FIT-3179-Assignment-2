@@ -1,0 +1,196 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {
+        "text": "Annual Rainfall Australia",
+        "fontSize": 20,  
+        "font": "Times New Roman" , 
+        "align": "center",  
+        "anchor": "middle",  
+        "dy": -10
+    },
+    "background": "#e9eef7",
+
+    "params": [
+        {
+            "name": "State_selection",
+            "value": "Adelaide"
+        }
+    ],
+    "columns": 2,
+    "concat": [
+        {
+            "width": 700,
+            "height": 300,
+            "data": {
+                "url": "datasets/aus_rainfall.csv",
+                "format": {
+                    "type": "csv"
+                }
+            },
+            "transform": [
+                {
+                    "fold": [
+                        "JAN",
+                        "FEB",
+                        "MAR",
+                        "APR",
+                        "MAY",
+                        "JUN",
+                        "JUL",
+                        "AUG",
+                        "SEP",
+                        "OCT",
+                        "NOV",
+                        "DEC"
+                    ],
+                    "as": [
+                        "Month",
+                        "MonthVal"
+                    ]
+                },
+                {
+                    "filter": "datum.LOCATION == State_selection"
+                }
+            ],
+            "mark": "area",
+            "encoding": {
+                "x": {
+                    "field": "Month",
+                    "type": "ordinal",
+                    "title": null,
+                    "sort": [
+                        "JAN",
+                        "FEB",
+                        "MAR",
+                        "APR",
+                        "MAY",
+                        "JUN",
+                        "JUL",
+                        "AUG",
+                        "SEP",
+                        "OCT",
+                        "NOV",
+                        "DEC"
+                    ],
+                    "axis": {
+                        "offset": 5,
+                        "ticks": true,
+                        "minExtent": 70,
+                        "domain": true,
+                        "domainColor": "black",
+                        "tickColor": "black",
+                        "labelColor": "black"
+                    }
+                },
+                "y": {
+                    "field": "MonthVal",
+                    "type": "quantitative",
+                    "title": "Rainfall",
+                    "axis": {
+                        "domain": true,
+                        "domainColor": "black",
+                        "ticks": true,
+                        "tickColor": "black",
+                        "labelColor": "black",
+                        "titleColor": "black"
+                    }
+                },
+                "color": {
+                    "field": "LOCATION",
+                    "type": "nominal",
+                    "scale": {
+                        "domain": [
+                            "Adelaide",
+                            "Brisbane",
+                            "Canberra",
+                            "Darwin",
+                            "Hobart",
+                            "Melbourne",
+                            "Perth",
+                            "Sydney"
+                        ],
+                        "range": [
+                            "#1f77b4",
+                            "#bcbf93",
+                            "#ddadad",
+                            "#9467bd",
+                            "#8c564b",
+                            "#e377c2",
+                            "#7f7f7f",
+                            "#17becf"
+                        ]
+                    },
+                    "legend": null
+
+                }, 
+                "tooltip": [ 
+                    {"field": "LOCATION", "title": "City"},
+                    {"field": "Month", "title": "Month"},
+                    {"field": "MonthVal", "title": "Rainfall"}
+                  ]
+            }
+        },
+        { "width": 300,
+        "height": 300,
+        "data": {
+          "url": "datasets/aus_rainfall.csv"
+        },
+        "encoding": {
+          "theta": {
+            "field": "ANNUAL",
+            "type": "quantitative"
+          },
+          "color": {
+            "field": "LOCATION",
+            "type": "nominal",
+            "legend": null,
+            "scale": {
+                "domain": [
+                    "Adelaide",
+                    "Brisbane",
+                    "Canberra",
+                    "Darwin",
+                    "Hobart",
+                    "Melbourne",
+                    "Perth",
+                    "Sydney"
+                ],
+                "range": [
+                    "#1f77b4",
+                    "#bcbf93",
+                    "#ddadad",
+                    "#9467bd",
+                    "#8c564b",
+                    "#e377c2",
+                    "#7f7f7f",
+                    "#17becf"
+                ]
+            }
+          },
+      "opacity": {
+        "condition": {
+          "test": "datum.LOCATION === State_selection",
+          "value": 1  
+        },
+        "value": 0.3  
+      }
+      ,
+          "tooltip": [ 
+            {"field": "LOCATION", "title": "City"},
+            {"field": "ANNUAL", "title": "Annual Rainfall"}
+          ]
+        },
+        "mark": {
+          "type": "arc",
+          "innerRadius": 70,
+          "stroke": "#fff"
+        }
+      }
+      
+    ],
+    "resolve": {
+        "scale": {
+            "color": "independent"
+        }
+    }
+}

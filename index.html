@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Import Vega & Vega-Lite (does not have to be from CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+
+  <!-- CSS file -->
+  <link rel="stylesheet" type="text/css" href="style.css" media="all">
+
+</head>
+
+<body style="background-color:#f3f3f3;">
+  <header class="header-image">
+    <h1>AUSTRALIA WEATHER & CLIMATE EXTREME</h1>
+  </header>
+
+  <div class="container">
+
+    <div>
+      <p id="myParagraph">
+        Australia's diverse climate results in different regions across the country having unique heating and cooling
+        needs.
+        To accommodate these variations, the energy efficiency DTS Provisions differ by location.
+        For ease of use, areas with similar climates are grouped into eight climate zones.
+
+      </p>
+
+      <div id="legend-container" style="display: flex; align-items: flex-start;">
+        <div class="climate-legend" style="margin-left: 20px; margin-right: 40px;">
+          <p><strong>Climate Zones:</strong></p>
+          <div class="legend-items" style="display: flex; flex-direction: column; gap: 5px;">
+            <div class="legend-item" data-clim="1" style="display: flex; align-items: center; cursor: pointer;"
+              onclick="highlightZone(null)">
+              <div style="width: 20px; height: 20px; background-color: #090909; margin-right: 5px;"></div>
+              <span>Show All Zone</span>
+            </div>
+            <div class="legend-item" data-clim="1" style="display: flex; align-items: center; cursor: pointer;"
+              onclick="highlightZone(1)">
+              <div style="width: 20px; height: 20px; background-color: #ff8554; margin-right: 5px;"></div>
+              <span>Zone 1: high humidity summer, warm winter</span>
+            </div>
+            <div class="legend-item" data-clim="2" style="display: flex; align-items: center; cursor: pointer;"
+              onclick="highlightZone(2)">
+              <div style="width: 20px; height: 20px; background-color: #f0e442; margin-right: 5px;"></div>
+              <span>Zone 2: warm humid summer, mild winter</span>
+            </div>
+            <div class="legend-item" data-clim="3" style="display: flex; align-items: center; cursor: pointer;"
+              onclick="highlightZone(3)">
+              <div style="width: 20px; height: 20px; background-color: #f2a84e; margin-right: 5px;"></div>
+              <span>Zone 3: hot dry summer, warm winter</span>
+            </div>
+            <div class="legend-item" data-clim="4" style="display: flex; align-items: center; cursor: pointer;"
+              onclick="highlightZone(4)">
+              <div style="width: 20px; height: 20px; background-color: #f2eec2; margin-right: 5px;"></div>
+              <span>Zone 4: hot dry summer, cool winter</span>
+            </div>
+            <div class="legend-item" data-clim="5" style="display: flex; align-items: center; cursor: pointer;"
+              onclick="highlightZone(5)">
+              <div style="width: 20px; height: 20px; background-color: #a3c97b; margin-right: 5px;"></div>
+              <span>Zone 5: warm temperate</span>
+            </div>
+            <div class="legend-item" data-clim="6" style="display: flex; align-items: center; cursor: pointer;"
+              onclick="highlightZone(6)">
+              <div style="width: 20px; height: 20px; background-color: #4db3e6; margin-right: 5px;"></div>
+              <span>Zone 6: mild temperate</span>
+            </div>
+            <div class="legend-item" data-clim="7" style="display: flex; align-items: center; cursor: pointer;"
+              onclick="highlightZone(7)">
+              <div style="width: 20px; height: 20px; background-color: #0072b2; margin-right: 5px;"></div>
+              <span>Zone 7: cool temperate</span>
+            </div>
+            <div class="legend-item" data-clim="8" style="display: flex; align-items: center; cursor: pointer;"
+              onclick="highlightZone(8)">
+              <div style="width: 20px; height: 20px; background-color: #636362; margin-right: 5px;"></div>
+              <span>Zone 8: alpine</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+    <div id="map_container">
+      <div id="aus_zone_map"></div>
+    </div>
+  </div>
+
+
+
+  <!-- Container for heading and paragraph -->
+  <div class="visualization-header">
+    <h2>CLIMATE CHANGE IN YEAR 2023</h2>
+    <p style="color: white;">
+      In 2023, Australia experienced notable climate variations, with extreme weather patterns affecting various
+      regions.
+      From heavy rainfall in some areas to prolonged dry spells in others, these shifts in weather patterns highlight
+      the growing impact of climate change on the country's environment. This analysis provides a comprehensive view
+      of rainfall across Australia’s capital cities, shedding light on the regional differences and the overall climate
+      trends.
+    </p>
+  </div>
+
+
+
+  <div class="info-legend-container">
+    <p>
+      This graph illustrates the annual rainfall in Australia's capital cities alongside the total yearly rainfall.
+      Feel free to select from the dropdown menu to explore rainfall data for different locations.
+    </p>
+
+    <div class="flags-container"
+      style="display: flex; gap: 10px; margin-bottom: 10px; margin-left: 80px;margin-right: 80px;">
+      <div class="legend-middle">
+        <img src="flags/Adelaide.png" alt="Adelaide" id="Adelaide" class="flag-image" />
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #1f77b4;"></span> Adelaide
+        </div>
+      </div>
+      <div class="legend-middle">
+        <img src="flags/Brisbane.png" alt="Brisbane" id="Brisbane" class="flag-image" />
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #bcbf93;"></span> Brisbane
+        </div>
+      </div>
+      <div class="legend-middle">
+        <img src="flags/canberra.png" alt="Canberra" id="Canberra" class="flag-image" />
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #ddadad;"></span> Canberra
+        </div>
+      </div>
+      <div class="legend-middle">
+        <img src="flags/Darwin.png" alt="Darwin" id="Darwin" class="flag-image" />
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #9467bd;"></span> Darwin
+        </div>
+      </div>
+
+      <div class="legend-middle">
+        <img src="flags/Hobart.png" alt="Hobart" id="Hobart" class="flag-image" />
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #8c564b;"></span> Hobart
+        </div>
+      </div>
+      <div class="legend-middle">
+        <img src="flags/Perth.png" alt="Perth" id="Perth" class="flag-image" />
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #7f7f7f;"></span> Perth
+        </div>
+      </div>
+      <div class="legend-middle">
+        <img src="flags/Melbourne.png" alt="Melbourne" id="Melbourne" class="flag-image" />
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #e377c2;"></span> Melbourne
+        </div>
+      </div>
+      <div class="legend-middle">
+        <img src="flags/Sydney.png" alt="Sydney" id="Sydney" class="flag-image" />
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #17becf;"></span> Sydney
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="combined_chart" class="map-extreme" style="margin-right: 60px ; background-color: #e9eef7"></div>
+  </div>
+
+  <hr>
+
+  <div class="container" id="min-max-container">
+    <div>
+      <p>
+        This graph illustrates the range between the minimum and maximum temperatures across Australia's cities,
+        highlighting the country's extreme weather patterns.
+        Use the dropdown menu to explore temperature variations
+        for different cities and gain insights into their unique climate conditions.
+      </p>
+      <div
+        style="display: flex; align-items: center; margin-top: 20px; margin-right: 20px; margin-left: 20px; padding: 30px;">
+        <select id="State-selection-legend" class="styled-select" style="margin-right: 30px;">
+          <option value="Adelaide">Adelaide</option>
+          <option value="Brisbane">Brisbane</option>
+          <option value="Canberra">Canberra</option>
+          <option value="Darwin">Darwin</option>
+          <option value="Hobart">Hobart</option>
+          <option value="Melbourne">Melbourne</option>
+          <option value="Perth">Perth</option>
+          <option value="Sydney">Sydney</option>
+        </select>
+        <div class="custom-legend"
+          style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
+
+          <button id="reset-button" class="legend-button"
+            style="background-color: #82a482; color: white; border: none; padding: 10px 20px; margin: 5px 0; border-radius: 5px; cursor: pointer;">
+            Show All
+          </button>
+          <button id="min-button" class="legend-button"
+            style="background-color: #2577fa; color: white; border: none; padding: 10px 20px; margin: 5px 0; border-radius: 5px; cursor: pointer;">
+            Min Temperature
+          </button>
+          <button id="max-button" class="legend-button"
+            style="background-color: #f57749; color: white; border: none; padding: 10px 20px; margin: 5px 0; border-radius: 5px; cursor: pointer;">
+            Max Temperature
+          </button>
+        </div>
+
+      </div>
+    </div>
+    <div id="aus_min_max_temp" class="map-extreme"
+      style="margin-right: 10px ; background-color: #e9eef7; margin-left: 30px ;"></div>
+  </div>
+
+
+  <div class="visualization-header">
+    <h2>EXTREME EVENTS </h2>
+    <p style="color: white;">
+      Many major impacts of climate change—on people, the environment, and the economy—are due to extreme events like
+      heatwaves, heavy rain, droughts, fires, and storms.
+
+      These events can be especially damaging when one event intensifies the effects of another,
+      a process called ‘compounding’ or ‘cascading’ extremes. For example, droughts can increase bushfire
+      risks in forests but reduce them in arid areas due to less vegetation.
+      Similarly, back-to-back events like a flood after a bushfire can create greater damage than either event alone.
+    </p>
+  </div>
+
+  <!-- lowest layer -->
+
+  <div class="map_boxes">
+    <div id="aus_highest_temp" class="map"></div>
+    <div id="aus_lowest_temp" class="map"></div>
+    <div id="aus_highest_annual_rainfall" class="map"></div>
+  </div>
+
+  <div class="container">
+    <p style="margin-left: 40px;">
+      The graph below illustrates the extent of Australia and the selected State or
+      Territory that experienced extreme heat, cold, or rainfall on each chosen day of the year.
+      It shows the percentage of land area where temperature or rainfall records were either
+      broken or nearly broken on the selected day.
+    </p>
+
+    <!-- Title for the Legend directly above the Legend -->
+    <div style="margin-left: 40px;">
+      <h4 style="color: #333; margin: 0; 	font-size: 18px;">Extreme Weather Categories</h4>
+      <!-- Inline Legend -->
+      <div id="legend" class="legend">
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #d9d9b9;"></span> Lowest on record
+        </div>
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #e8dc55;"></span> Below 1st Percentile
+        </div>
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #655f36;"></span> Below 3rd Percentile
+        </div>
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #c8aabd;"></span> Above 97th Percentile
+        </div>
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #c94087;"></span> Above 99th Percentile
+        </div>
+        <div class="legend-item">
+          <span class="legend-box" style="background-color: #ce5f49;"></span> Highest on record
+        </div>
+      </div>
+      <label for="temp-selection">Categories:</label>
+
+      <select id="temp-selection">
+        <option value="">All</option>
+        <option value="Lowest">Lowest Percentile</option>
+        <option value="1st">1st Percentile</option>
+        <option value="3rd">3rd Percentile</option>
+        <option value="97th">97th Percentile</option>
+        <option value="99th">99th Percentile</option>
+        <option value="Highest">Highest Percentile</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div id="aus_extreme_temp" class="map-extreme"></div>
+
+  <div class="author">
+    <p><strong>Author:</strong> Ethel Lim Jia Yee</p>
+    <p><strong>Datasets:</strong> 
+      <a href="https://www.abcb.gov.au/resources/climate-zone-map">Climate Zone</a>
+      <a href="http://www.bom.gov.au/climate/australia/cities/">Australia City Temperature</a>
+    </p>  
+    </div>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    var aus_zone_map = "aus_zone_1.json";
+    var combined_chart = "combined_chart.json";
+    var aus_min_max_temp = "aus_min_max_temp.json";
+    var aus_highest_temp = "aus_highest_temp.json";
+    var aus_lowest_temp = "aus_lowest_temp.json";
+    var aus_highest_annual_rainfall = "aus_highest_annual_rainfall.json";
+    var aus_extreme_temp = "aus_extreme_temp.json";
+
+    let zone_view;
+
+    vegaEmbed('#aus_zone_map', aus_zone_map).then(function (result) {
+      zone_view = result.view;
+
+    }).catch(console.error);
+
+    function highlightZone(zone) {
+      if (zone_view) {
+        // Send a signal to Vega-Lite with the selected zone
+        zone_view.signal('highlight_type', zone).run();
+      }
+    }
+
+    vegaEmbed('#combined_chart', combined_chart).then(function (result) {
+
+      const view = result.view;
+
+      // Function to handle the flag click event and update the Vega-Lite signal
+      function handleFlagClick(event) {
+        // Get the ID of the clicked flag
+        const selectedFlagId = event.target.id;
+        console.log(selectedFlagId)
+
+        // Update the 'state_selection' signal in the Vega-Lite view
+        view.signal('State_selection', selectedFlagId).run();
+      }
+
+      // Add event listeners to each flag image
+      const flagImages = document.querySelectorAll('.flag-image');
+      flagImages.forEach((flag) => {
+        flag.addEventListener('click', handleFlagClick);
+      });
+
+      // Visualization successfully rendered
+    }).catch(console.error);
+
+    vegaEmbed('#aus_min_max_temp', aus_min_max_temp).then(function (result) {
+      const view = result.view;
+      // Add an event listener for the select menu
+      document.getElementById('State-selection-legend').addEventListener('change', function (event) {
+        // Update the parameter with the selected value
+        view.signal('State_selection', event.target.value);  // Use signal instead of set
+        view.run();
+      });
+
+      // Add click event listener to the 'Min Temperature' button
+      document.getElementById('min-button').addEventListener('click', function () {
+        view.signal('highlight_type', 'min').run();
+      });
+
+      // Add click event listener to the 'Max Temperature' button
+      document.getElementById('max-button').addEventListener('click', function () {
+        view.signal('highlight_type', 'max').run();
+      });
+      // Add click event listener to the 'Max Temperature' button
+      document.getElementById('reset-button').addEventListener('click', function () {
+        view.signal('highlight_type', null).run();
+      });
+
+      // Visualization successfully rendered
+    }).catch(console.error);
+
+    vegaEmbed('#aus_highest_temp', aus_highest_temp).then(function (result) {
+      // Visualization successfully rendered
+    }).catch(console.error);
+
+    vegaEmbed('#aus_lowest_temp', aus_lowest_temp).then(function (result) {
+      // Visualization successfully rendered
+    }).catch(console.error);
+
+
+    vegaEmbed('#aus_highest_annual_rainfall', aus_highest_annual_rainfall).then(function (result) {
+      // Visualization successfully rendered
+    }).catch(console.error);
+
+    vegaEmbed('#aus_extreme_temp', aus_extreme_temp).then(function (result) {
+      // Visualization successfully rendered
+      const view = result.view;
+
+      // Add an event listener for the select menu
+      document.getElementById('temp-selection').addEventListener('change', function (event) {
+        // Update the parameter with the selected value
+        if (event.target.value == "") {
+          view.signal('temp_selection', null);  // Use signal instead of set
+
+        }
+        else {
+          view.signal('temp_selection', event.target.value);  // Use signal instead of set
+
+        }
+        view.run();
+      });
+    }).catch(console.error);
+  </script>
+
+</body>
+
+</html>
