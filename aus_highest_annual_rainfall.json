@@ -48,9 +48,11 @@
             "type": "quantitative"
           },
           "color": {
-              "field": "Rainfall", "type": "quantitative",
-              "scale": {"domain":[1000,12500], "range":["#fff8c9","#f0e07a","#ffdd00"]},
-              "legend": {"title":"Annual rainfall (mm)"}
+            "field": "Rainfall",
+            "type": "quantitative",
+            "scale": {
+              "domain": [1000, 12500],
+              "range": ["#fff8c9", "#f0e07a", "#ffdd00"]  
             }
           },
           "size": {
